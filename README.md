@@ -38,5 +38,6 @@ require("async-to-gen/register");
 
 ## Changelog
 
-1.1.1 - Close AWS Lambda after every process. Force developers to close connections if they want to keep the AWS Lamdba Alive
+1.2.1 - Remove process.exit() to fix error.
+1.1.1 - Close AWS Lambda after every process. (HAS ERRORS)
 0.0.01 - Initial release

@@ -11,7 +11,7 @@
   "private": true,
   "devDependencies": {},
   "dependencies": {
-    "@orikami/micro-to-lambda": "^1.1.0",
+    "@orikami/micro-to-lambda": "^1.2.1",
     "micro": "^9.3.3"
   }
 }

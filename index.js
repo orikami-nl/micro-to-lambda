@@ -65,7 +65,7 @@ module.exports = function microToLambdaHandler(fn, opts = {}) {
       console.error("ERROR: When you keep the AWS Lambda alive, you must promise to close the database connections.");
       console.error("FIX: micro-to-lambda(handler, { keepAlive: true, iPromiseToCloseDatabaseConnections: true })");
       callback(new Error("Did not promise to close database connection"))
-      process.exit();
+      return
     }
 
     context.callbackWaitsForEmptyEventLoop = !keepAlive;
@@ -74,15 +74,9 @@ module.exports = function microToLambdaHandler(fn, opts = {}) {
     run(req,res,fn)
       .then(() => {
         callback(null,res.toLambdaResponse())
-        if (!keepAlive) {
-          process.exit();
-        }
       })
       .catch(err => {
         callback(err);
-        if(!keepAlive) {
-          process.exit()
-        }
       });
   }
 }
