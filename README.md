@@ -22,9 +22,21 @@ var index = require('./index');
 module.exports.time = microToLambda(index);
 ```
 
-If you're using `async` or `await` syntax, it is recommended to use the
-`async-to-gen` helper to make code compatible for node 6.10.x
+By default, the lambda will terminate the process after every request.
+If you want to keep the process alive, use:
+
+```
+microToLambda(handler, { keepAlive: true, iPromiseToCloseDatabaseConnections: true })
+```
+
+As you can see, you have to promise to close all database connections (to MongoDB). Otherwise, the autoscaling of lambda can cause trouble for the connection limit of the database.
+
 
 ```javascript
 require("async-to-gen/register");
 ```
+
+## Changelog
+
+1.1.1 - Close AWS Lambda after every process. Force developers to close connections if they want to keep the AWS Lamdba Alive
+0.0.01 - Initial release

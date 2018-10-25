@@ -1,0 +1,17 @@
+{
+  "name": "micro-to-lambda-test",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "cross-env STAGE=staging micro handler.js",
+    "dev": "cross-env STAGE=staging micro-dev handler.js",
+    "test": "jest"
+  },
+  "author": "Stijn Albers van der Linden",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {},
+  "dependencies": {
+    "@orikami/micro-to-lambda": "^1.1.0",
+    "micro": "^9.3.3"
+  }
+}

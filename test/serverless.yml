@@ -1,0 +1,38 @@
+# The `service` block is the name of the service
+service: micro-to-lambda-test
+
+# The `provider` block defines where your service will be deployed
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: eu-west-1
+  profile: orikamiserverless
+  stage: ${opt:stage, 'staging'}
+  deploymentBucket:
+    name: com.serverless.deploy 
+  environment:
+    STAGE: ${opt:stage, 'staging'}
+
+# The `functions` block defines what code to deploy
+functions:
+  exit:
+    handler: handler.exit
+    events:
+      - http:
+          path: exit
+          method: post
+          cors: true
+  keepalive:
+    handler: handler.keepalive
+    events:
+      - http:
+          path: keepalive
+          method: post
+          cors: true
+  error:
+    handler: handler.error
+    events:
+      - http:
+          path: error
+          method: post
+          cors: true

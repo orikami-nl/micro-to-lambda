@@ -57,21 +57,32 @@ function createResponse() {
     return response;
 }
 
-module.exports = function microToLambdaHandler(fn) {
+module.exports = function microToLambdaHandler(fn, opts = {}) {
   return function lambdaHandler(event, context, callback) {
-    context.callbackWaitsForEmptyEventLoop = false;
+    const keepAlive = (opts.callbackWaitsForEmptyEventLoop === false || opts.keepAlive === true)
+
+    if(keepAlive && opts.iPromiseToCloseDatabaseConnections !== true) {
+      console.error("ERROR: When you keep the AWS Lambda alive, you must promise to close the database connections.");
+      console.error("FIX: micro-to-lambda(handler, { keepAlive: true, iPromiseToCloseDatabaseConnections: true })");
+      callback(new Error("Did not promise to close database connection"))
+      process.exit();
+    }
+
+    context.callbackWaitsForEmptyEventLoop = !keepAlive;
     var req = createRequest(event, context);
     var res = createResponse();
-    console.log('micro.run');
     run(req,res,fn)
       .then(() => {
-        console.log('micro.run finished');
         callback(null,res.toLambdaResponse())
-        // process.exit(); // TODO this will not reuse the DB connection.. find a better way!
+        if (!keepAlive) {
+          process.exit();
+        }
       })
       .catch(err => {
         callback(err);
-        // process.exit();// TODO this will not reuse the DB connection.. find a better way!
+        if(!keepAlive) {
+          process.exit()
+        }
       });
   }
 }
