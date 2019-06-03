@@ -49,6 +49,7 @@ function createResponse() {
     };
     response.toLambdaResponse = function(){
       return {
+        isBase64Encoded: true,
         statusCode: response.statusCode,
         headers: response.headers,
         body: response.body
